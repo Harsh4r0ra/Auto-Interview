@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HR Interview Assistant</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #fafafa;
+            min-height: 100vh;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 3px solid #2196F3;
+            padding: 24px 32px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 16px;
+            color: #666;
+            font-weight: 400;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            min-height: calc(100vh - 120px);
+        }
+
+        .left-panel {
+            background: #f8f9fa;
+            border-right: 1px solid #e9ecef;
+            padding: 32px 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .camera-section {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 24px;
+        }
+
+        .camera-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        #videoElement {
+            width: 100%;
+            height: 240px;
+            border-radius: 4px;
+            background: #000;
+            object-fit: cover;
+            border: 1px solid #dee2e6;
+        }
+
+        .camera-controls {
+            margin-top: 16px;
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            font-size: 14px;
+            background: white;
+            color: #495057;
+        }
+
+        .btn:hover {
+            border-color: #2196F3;
+            color: #2196F3;
+        }
+
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+            border-color: #2196F3;
+        }
+
+        .btn-primary:hover {
+            background: #1976D2;
+            border-color: #1976D2;
+            color: white;
+        }
+
+        .btn-success {
+            background: #4CAF50;
+            color: white;
+            border-color: #4CAF50;
+        }
+
+        .btn-success:hover {
+            background: #45a049;
+            border-color: #45a049;
+            color: white;
+        }
+
+        .btn-danger {
+            background: #f44336;
+            color: white;
+            border-color: #f44336;
+        }
+
+        .btn-danger:hover {
+            background: #da190b;
+            border-color: #da190b;
+            color: white;
+        }
+
+        .resume-section {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 24px;
+        }
+
+        .resume-section h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        .file-upload {
+            border: 2px dashed #dee2e6;
+            border-radius: 4px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            background: #fafafa;
+        }
+
+        .file-upload:hover {
+            border-color: #2196F3;
+            background: #f3f9ff;
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .file-upload p {
+            font-size: 16px;
+            color: #495057;
+            margin-bottom: 8px;
+        }
+
+        .file-upload small {
+            color: #6c757d;
+            font-size: 14px;
+        }
+
+        .right-panel {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .progress-bar {
+            background: #e9ecef;
+            height: 4px;
+            border-radius: 2px;
+            overflow: hidden;
+            margin-bottom: 24px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: #2196F3;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .questions-section {
+            flex: 1;
+        }
+
+        .questions-section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 24px;
+        }
+
+        .question-card {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 24px;
+            margin-bottom: 24px;
+            border-left: 4px solid #2196F3;
+        }
+
+        .question-card h4 {
+            color: #1a1a1a;
+            margin-bottom: 16px;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .question-card p {
+            color: #495057;
+            margin-bottom: 16px;
+            font-size: 15px;
+        }
+
+        .answer-input {
+            width: 100%;
+            min-height: 100px;
+            padding: 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 4px;
+            font-size: 14px;
+            resize: vertical;
+            font-family: inherit;
+            color: #495057;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: #2196F3;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .speech-controls {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+            align-items: center;
+        }
+
+        .listening-indicator {
+            color: #f44336;
+            font-weight: 600;
+            font-size: 14px;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.5; }
+            100% { opacity: 1; }
+        }
+
+        .rating-section {
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            padding: 24px;
+            background: white;
+        }
+
+        .rating-section h3 {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1a1a1a;
+            margin-bottom: 20px;
+        }
+
+        .rating-card {
+            margin-top: 16px;
+        }
+
+        .score-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 16px;
+            margin: 20px 0;
+        }
+
+        .score-item {
+            background: #f8f9fa;
+            padding: 16px;
+            border-radius: 4px;
+            text-align: center;
+            border: 1px solid #e9ecef;
+        }
+
+        .score-item h4 {
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #6c757d;
+            margin-bottom: 8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .score-value {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2196F3;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+            border: 1px solid;
+        }
+
+        .alert-success {
+            background: #f8fff9;
+            color: #2e7d32;
+            border-color: #c8e6c9;
+        }
+
+        .alert-info {
+            background: #f3f9ff;
+            color: #1565c0;
+            border-color: #bbdefb;
+        }
+
+        .alert-danger {
+            background: #fff5f5;
+            color: #c62828;
+            border-color: #ffcdd2;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .left-panel {
+                border-right: none;
+                border-bottom: 1px solid #e9ecef;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>HR Interview Assistant</h1>
+            <p>AI-Powered Resume Analysis & Interview Platform</p>
+        </div>
+
+        <div class="main-content">
+            <!-- Left Panel -->
+            <div class="left-panel">
+                <!-- Camera Section -->
+                <div class="camera-section">
+                    <h3>Video Interview</h3>
+                    <video id="videoElement" autoplay muted></video>
+                    <div class="camera-controls">
+                        <button class="btn btn-primary" onclick="startCamera()">Start Camera</button>
+                        <button class="btn btn-danger" onclick="stopCamera()">Stop Camera</button>
+                    </div>
+                </div>
+
+                <!-- Resume Upload Section -->
+                <div class="resume-section">
+                    <h3>Resume Analysis</h3>
+                    <div class="file-upload" onclick="document.getElementById('resumeFile').click()">
+                        <input type="file" id="resumeFile" accept=".pdf" onchange="uploadResume()">
+                        <p>Click to upload resume (PDF)</p>
+                        <small>The AI will analyze and generate interview questions</small>
+                    </div>
+                    <div id="resumeStatus" class="hidden"></div>
+                </div>
+            </div>
+
+            <!-- Right Panel -->
+            <div class="right-panel">
+                <!-- Progress Bar -->
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+                <!-- Questions Section -->
+                <div class="questions-section">
+                    <h3 id="questionsTitle">Interview Questions</h3>
+                    <div id="questionsContainer">
+                        <div class="alert alert-info">
+                            Please upload a resume to generate interview questions.
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rating Section -->
+                <div class="rating-section hidden" id="ratingSection">
+                    <h3>Candidate Rating</h3>
+                    <div id="ratingContainer"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let sessionId = null;
+        let currentQuestionIndex = 0;
+        let isFollowUp = false;
+        let mediaStream = null;
+        let recognition = null;
+        let currentAnswerInput = null;
+
+        // Initialize speech recognition
+        if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+            const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+            recognition = new SpeechRecognition();
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'en-US';
+
+            recognition.onresult = function(event) {
+                let finalTranscript = '';
+                let interimTranscript = '';
+
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript;
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+
+                if (currentAnswerInput) {
+                    currentAnswerInput.value = finalTranscript + interimTranscript;
+                }
+            };
+
+            recognition.onerror = function(event) {
+                console.error('Speech recognition error:', event.error);
+            };
+        }
+
+        // Camera functions
+        async function startCamera() {
+            try {
+                mediaStream = await navigator.mediaDevices.getUserMedia({ 
+                    video: true, 
+                    audio: false 
+                });
+                document.getElementById('videoElement').srcObject = mediaStream;
+            } catch (error) {
+                console.error('Error accessing camera:', error);
+                alert('Unable to access camera. Please check permissions.');
+            }
+        }
+
+        function stopCamera() {
+            if (mediaStream) {
+                mediaStream.getTracks().forEach(track => track.stop());
+                mediaStream = null;
+                document.getElementById('videoElement').srcObject = null;
+            }
+        }
+
+        // Resume upload function
+        async function uploadResume() {
+            const fileInput = document.getElementById('resumeFile');
+            const file = fileInput.files[0];
+
+            if (!file) return;
+
+            const formData = new FormData();
+            formData.append('file', file);
+
+            try {
+                document.getElementById('resumeStatus').innerHTML = '<div class="alert alert-info">Analyzing resume...</div>';
+                document.getElementById('resumeStatus').classList.remove('hidden');
+
+                const response = await fetch('/upload-resume', {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const data = await response.json();
+                sessionId = data.session_id;
+
+                document.getElementById('resumeStatus').innerHTML = '<div class="alert alert-success">Resume analyzed successfully!</div>';
+                displayQuestions(data.questions, false);
+                updateProgress(20);
+
+            } catch (error) {
+                console.error('Error uploading resume:', error);
+                document.getElementById('resumeStatus').innerHTML = '<div class="alert alert-danger">Error analyzing resume. Please try again.</div>';
+            }
+        }
+
+        // Display questions
+        function displayQuestions(questions, isFollowUpQuestions = false) {
+            const container = document.getElementById('questionsContainer');
+            const title = document.getElementById('questionsTitle');
+            
+            if (isFollowUpQuestions) {
+                title.textContent = 'Follow-up Questions';
+                isFollowUp = true;
+                currentQuestionIndex = 0;
+            } else {
+                title.textContent = 'Initial Interview Questions';
+                isFollowUp = false;
+            }
+
+            container.innerHTML = '';
+
+            questions.forEach((question, index) => {
+                const questionCard = document.createElement('div');
+                questionCard.className = 'question-card';
+                questionCard.innerHTML = `
+                    <h4>Question ${index + 1}</h4>
+                    <p>${question}</p>
+                    <textarea 
+                        class="answer-input" 
+                        id="answer-${index}" 
+                        placeholder="Your answer will appear here as you speak..."></textarea>
+                    <div class="speech-controls">
+                        <button class="btn btn-success" onclick="startListening(${index})">Start Speaking</button>
+                        <button class="btn btn-danger" onclick="stopListening()">Stop</button>
+                        <button class="btn btn-primary" onclick="submitAnswer(${index})">Submit Answer</button>
+                        <span id="listening-${index}" class="listening-indicator hidden">● Recording...</span>
+                    </div>
+                `;
+                container.appendChild(questionCard);
+            });
+        }
+
+        // Speech recognition functions
+        function startListening(questionIndex) {
+            if (!recognition) {
+                alert('Speech recognition not supported in this browser.');
+                return;
+            }
+
+            currentAnswerInput = document.getElementById(`answer-${questionIndex}`);
+            document.getElementById(`listening-${questionIndex}`).classList.remove('hidden');
+            
+            recognition.start();
+        }
+
+        function stopListening() {
+            if (recognition) {
+                recognition.stop();
+                document.querySelectorAll('.listening-indicator').forEach(el => el.classList.add('hidden'));
+            }
+        }
+
+        // Submit answer
+        async function submitAnswer(questionIndex) {
+            const answerInput = document.getElementById(`answer-${questionIndex}`);
+            const answer = answerInput.value.trim();
+
+            if (!answer) {
+                alert('Please provide an answer before submitting.');
+                return;
+            }
+
+            try {
+                const endpoint = isFollowUp ? '/submit-followup-answer' : '/submit-answer';
+                
+                const response = await fetch(endpoint, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        session_id: sessionId,
+                        question_index: questionIndex,
+                        answer: answer
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.status === 'success') {
+                    answerInput.style.backgroundColor = '#f8fff9';
+                    answerInput.style.borderColor = '#4CAF50';
+                    
+                    // Check if all questions are answered
+                    checkAllAnswered();
+                }
+
+            } catch (error) {
+                console.error('Error submitting answer:', error);
+                alert('Error submitting answer. Please try again.');
+            }
+        }
+
+        // Check if all questions are answered
+        function checkAllAnswered() {
+            const answerInputs = document.querySelectorAll('.answer-input');
+            const answeredCount = Array.from(answerInputs).filter(input => 
+                input.value.trim() !== '' && input.style.backgroundColor === 'rgb(248, 255, 249)'
+            ).length;
+
+            if (answeredCount === answerInputs.length) {
+                if (!isFollowUp) {
+                    // Show button to generate follow-up questions
+                    setTimeout(() => {
+                        if (confirm('All initial questions answered! Generate follow-up questions?')) {
+                            generateFollowUpQuestions();
+                        }
+                    }, 1000);
+                } else {
+                    // Show button to generate rating
+                    setTimeout(() => {
+                        if (confirm('All questions answered! Generate candidate rating?')) {
+                            generateRating();
+                        }
+                    }, 1000);
+                }
+            }
+
+            // Update progress
+            const progress = isFollowUp ? 60 + (answeredCount / answerInputs.length) * 30 : (answeredCount / answerInputs.length) * 40;
+            updateProgress(progress);
+        }
+
+        // Generate follow-up questions
+        async function generateFollowUpQuestions() {
+            try {
+                updateProgress(50);
+                const response = await fetch('/generate-followup', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        session_id: sessionId
+                    })
+                });
+
+                const data = await response.json();
+                displayQuestions(data.questions, true);
+                updateProgress(60);
+
+            } catch (error) {
+                console.error('Error generating follow-up questions:', error);
+                alert('Error generating follow-up questions. Please try again.');
+            }
+        }
+
+        // Generate rating
+        async function generateRating() {
+            try {
+                updateProgress(95);
+                const response = await fetch('/generate-rating', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        session_id: sessionId
+                    })
+                });
+
+                const rating = await response.json();
+                displayRating(rating);
+                updateProgress(100);
+                document.getElementById('ratingSection').classList.remove('hidden');
+            } catch (error) {
+                console.error('Error generating rating:', error);
+                alert('Error generating rating. Please try again.');
+            }
+        }
